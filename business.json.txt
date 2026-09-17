@@ -1,0 +1,8 @@
+{
+  "name": "Luna Handmade",
+  "hours": "Mon-Sun 7.30 am to 10.30 pm",
+  "location": "Kandy, Islandwide delivery",
+  "delivery": "Kandy area FREE, Other cities Rs.400, COD and Bank Deposit available",
+  "products": "Scrunchies Rs250-500, Keychains Rs300-700, Bookmarks Rs300-600, Mug Rugs Rs350-900, Baby Socks Rs600-1200, Baby Hat Rs700-1500, Baby Shoes Rs900-1500, Hat+Socks Set Rs1300-2000, Baby Pants Rs1200-2000, Romper Rs1800-3000, Frock Rs2000-3500, Gift Set Rs3000-5500, Crop Top Rs2500-4500, Top/Vest Rs2500-4500, Dress Rs3500-6500, Short Cardigan Rs3500-5500, Long Cardigan Rs4500-7500, Poncho Rs3000-5500, Small Bag Rs1800-3000, Tote Rs2500-4500, Backpack Rs3500-6000, Table Mat Rs1000-3500+, Flowers Rs500-2500+",
+  "faqs": "Custom orders: Ow gannawa, colour size custom. Time: 3-7 days, baby sets 5-10 days. Material: milk cotton/acrylic soft baby-safe."
+}

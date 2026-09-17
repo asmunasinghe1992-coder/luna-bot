@@ -1,0 +1,49 @@
+from flask import Flask, request
+import os, json, requests
+from openai import OpenAI
+
+app = Flask(__name__)
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+with open('business.json', encoding='utf-8') as f:
+    BUSINESS = json.load(f)
+
+TOKEN = os.getenv("WHATSAPP_TOKEN")
+PHONE_ID = os.getenv("PHONE_NUMBER_ID")
+VERIFY = os.getenv("VERIFY_TOKEN")
+
+def send_msg(to, text):
+    url = f"https://graph.facebook.com/v21.0/{PHONE_ID}/messages"
+    headers = {"Authorization": f"Bearer {TOKEN}"}
+    payload = {"messaging_product": "whatsapp", "to": to, "type": "text", "text": {"body": text}}
+    requests.post(url, headers=headers, json=payload)
+
+SYSTEM = """You are Luna assistant for Luna Handmade, Kandy crochet brand.
+Knowledge: {knowledge}
+Rules: Reply in same language user used (Sinhala mixed English ok). Short, warm, max 4 lines. Kandy FREE delivery, others Rs.400. COD + Bank deposit. Hours Mon-Sun 7.30am-10.30pm. Prices are ranges - exact depends on size/design. For order ask item+colour+size+city. If unknown: 'Mama Luna-ta ahala kiyannam 😊'"""
+
+@app.route("/webhook", methods=["GET"])
+def verify_webhook():
+    if request.args.get("hub.verify_token") == VERIFY:
+        return request.args.get("hub.challenge")
+    return "fail", 403
+
+@app.route("/webhook", methods=["POST"])
+def webhook():
+    data = request.json
+    try:
+        val = data['entry'][0]['changes'][0]['value']
+        if 'messages' not in val: return "ok", 200
+        msg = val['messages'][0]
+        to = msg['from']
+        text = msg['text']['body']
+        prompt = SYSTEM.format(knowledge=json.dumps(BUSINESS, ensure_ascii=False)) + f"\nUser: {text}"
+        res = client.chat.completions.create(model="gpt-4o-mini", messages=[{"role":"user","content":prompt}], temperature=0.4)
+        reply = res.choices[0].message.content
+        send_msg(to, reply)
+    except Exception as e:
+        print(e)
+    return "ok", 200
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=10000)
